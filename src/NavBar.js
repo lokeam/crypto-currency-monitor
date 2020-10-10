@@ -1,4 +1,5 @@
 import React from 'react';
+import { AppContext } from './AppProvider';
 import styled, { css } from 'styled-components';
 
 const Logo = styled.div`
@@ -26,9 +27,15 @@ const Nav = styled.nav`
 
 function ControlButton({ name, active }) {
   return (
-    <ControlButtonElement active={active}>
-      {name}
-    </ControlButtonElement>
+    <AppContext.Consumer>
+      {({page, setPage}) => (
+        <ControlButtonElement active={page === name}
+                              onClick={ () => setPage(name) }>
+        {name}
+      </ControlButtonElement>
+      )}
+    </AppContext.Consumer>
+
   );
 }
 
