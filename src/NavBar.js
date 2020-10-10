@@ -1,16 +1,36 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
+const Logo = styled.div`
+font-size: 1.5em;
+`;
+
+const ControlButtonElement = styled.div`
+  cursor: pointer;
+  text-transform: capitalize;
+  ${props => props.active && css`
+    text-shadow: 0px 0px 60px #03ff03;
+  `}
+`;
 
 const Nav = styled.nav`
   ul {
     list-style: none;
     padding: 0;
-    margin: 0;
+    margin: 0 0 40px 0;
 
     display: grid;
     grid-template-columns: 180px auto 100px 100px;
   }
 `;
+
+function ControlButton({ name, active }) {
+  return (
+    <ControlButtonElement active={active}>
+      {name}
+    </ControlButtonElement>
+  );
+}
 
 export default function() {
   return (
@@ -18,8 +38,12 @@ export default function() {
       <ul>
         <li>Navbar - Logo</li>
         <li></li>
-        <li>Dashboard</li>
-        <li>Settings</li>
+        <li>
+          <ControlButton active name="dashboard"/>
+        </li>
+        <li>
+          <ControlButton name="settings" />
+        </li>
       </ul>
     </Nav>
   )
