@@ -1,6 +1,7 @@
 import React from 'react';
 import AppLayout from './AppLayout';
 import NavBar from './NavBar';
+import Settings from './Settings';
 import { AppProvider } from './AppProvider';
 import styled, { css } from 'styled-components';
 
@@ -10,7 +11,7 @@ function App() {
     <AppLayout>
       <AppProvider>
         <NavBar />
-        <p>React crypto-currency monitor</p>
+        <Settings />
       </AppProvider>
     </AppLayout>
   );
