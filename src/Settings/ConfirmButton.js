@@ -6,9 +6,12 @@ import styled from 'styled-components';
 const ConfirmButton = styled.div`
   margin: 20px;
   color: ${color3};
-  ${fontSize1}
+  ${fontSize1};
   padding: 5px;
   cursor: pointer;
+  &:hover {
+    ${greenBoxShadow}
+  }
 `;
 
 export const CenterDiv = styled.div`
