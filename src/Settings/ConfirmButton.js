@@ -1,10 +1,13 @@
 import React from 'react';
 import { AppContext } from '../AppProvider';
+import { fontSize1, greenBoxShadow, color3 } from '../Shared/Styles';
 import styled from 'styled-components';
 
 const ConfirmButton = styled.div`
   margin: 20px;
-  color: red;
+  color: ${color3};
+  ${fontSize1}
+  padding: 5px;
   cursor: pointer;
 `;
 
