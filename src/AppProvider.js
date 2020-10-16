@@ -1,7 +1,10 @@
 import React, { Component, createContext } from 'react';
+import _ from 'lodash';
 
 const cryptoComp = require('cryptocompare');
 cryptoComp.setApiKey(`${process.env.REACT_APP_CRYPTO_COMPARE_API_KEY}`);
+
+const MAX_FAVOURITES = 10;
 
 export const AppContext = createContext();
 
@@ -11,6 +14,10 @@ export class AppProvider extends Component {
     this.state = {
       page: 'dashboard',
       setPage: this.setPage,
+      addCoin: this.addCoin,
+      removeCoin: this.removeCoin,
+      isInFavourites: this.isInFavourites,
+      favourites: ['BTC', 'DOGE', 'ETH', 'XMR'],
       ...this.saveSettings(),
       confirmFavourites: this.confirmFavourites
     }
@@ -19,6 +26,24 @@ export class AppProvider extends Component {
   componentDidMount = () => {
     this.fetchCoins();
   }
+
+  addCoin = key => {
+    let favourites = [...this.state.favourites];
+    if ( favourites.length < MAX_FAVOURITES ) {
+      favourites.push(key);
+      this.setState({favourites})
+    }
+  }
+
+  removeCoin = key => {
+    let favourites = [...this.state.favourites];
+    this.setState({
+      favourites: _.pull(favourites, key)
+    })
+  }
+
+  // helper fn to ensure that we don't keep adding the same coin to favs
+  isInFavourites = key => _.includes(this.state.favourites, key);
 
   fetchCoins = async () => {
     // utilizes cryptocompare API to grab list of coins
@@ -37,7 +62,8 @@ export class AppProvider extends Component {
         firstVisit: true
       }
     }
-    return {};
+    let { favourites } = cryptoData
+    return { favourites };
   }
 
   confirmFavourites = () => {
@@ -47,7 +73,7 @@ export class AppProvider extends Component {
       page: 'dashboard'
     });
     localStorage.setItem('cryptoMonitor', JSON.stringify({
-      test: 'hello'
+      favourites: this.state.favourites
     }));
   }
 
