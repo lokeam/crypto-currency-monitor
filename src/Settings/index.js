@@ -8,6 +8,7 @@ export default function() {
   return (
     <Page name="settings">
       <p>React crypto-currency monitor</p>
+      <CoinGrid topSection />
       <ConfirmButton />
       <CoinGrid />
     </Page>
