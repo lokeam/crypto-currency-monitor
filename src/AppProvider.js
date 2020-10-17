@@ -19,6 +19,7 @@ export class AppProvider extends Component {
       isInFavourites: this.isInFavourites,
       favourites: ['BTC', 'DOGE', 'ETH', 'XMR'],
       ...this.saveSettings(),
+      setFilteredCoins: this.setFilteredCoins,
       confirmFavourites: this.confirmFavourites
     }
   }
@@ -65,6 +66,8 @@ export class AppProvider extends Component {
     let { favourites } = cryptoData
     return { favourites };
   }
+
+  setFilteredCoins = filteredCoins => this.setState({filteredCoins});
 
   confirmFavourites = () => {
     console.log('ding');

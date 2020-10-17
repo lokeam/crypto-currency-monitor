@@ -11,18 +11,24 @@ export const CoinGrid = styled.div`
   margin: 40px 0 0 0;
 `;
 
+// Filters results for the lower coinGrid, below favourites
+function getLowerSectionCoins( coinList, filteredCoins ) {
+  return ( filteredCoins && Object.keys(filteredCoins) ) ||
+    Object.keys(coinList).slice(0, 100);
+}
+
 // only get the first 100 of the coins
-function getCoinsToDisplay( coinList, topSection, favourites ) {
+function getCoinsToDisplay( coinList, topSection, favourites, filterCoins ) {
   // display either favourites or a slice of the top x coins
-  return topSection ? favourites : Object.keys(coinList).slice(0, topSection ? 10 : 100);
+  return topSection ? favourites : getLowerSectionCoins(coinList, filterCoins);
 }
 
 export default function({topSection}) {
   return (
     <AppContext.Consumer>
       {
-        ({coinList, favourites}) => <CoinGrid>
-          {getCoinsToDisplay(coinList, topSection, favourites).map(
+        ({coinList, favourites, filteredCoins}) => <CoinGrid>
+          {getCoinsToDisplay(coinList, topSection, favourites, filteredCoins).map(
             coinKey => <CoinTile topSection={topSection} key={coinKey} coinKey={coinKey} />
             )
           }
