@@ -1,5 +1,6 @@
 import React, { Component, createContext } from 'react';
 import _ from 'lodash';
+import fuzzy from 'fuzzy';
 
 const cryptoComp = require('cryptocompare');
 cryptoComp.setApiKey(`${process.env.REACT_APP_CRYPTO_COMPARE_API_KEY}`);
@@ -26,6 +27,7 @@ export class AppProvider extends Component {
 
   componentDidMount = () => {
     this.fetchCoins();
+    this.fetchPrices();
   }
 
   addCoin = key => {
@@ -55,6 +57,27 @@ export class AppProvider extends Component {
     console.log(coinList);
   }
 
+  fetchPrices = async () => {
+    if ( this.state.firstVisit ) return;
+    let prices = await this.prices();
+    prices = prices.filter( price => Object.keys(price).length);
+    this.setState({ prices });
+  }
+
+  prices = async () => {
+    let returnData = [];
+
+    for ( let i = 0; i < this.state.favourites.length; i++ ) {
+      try {
+        let priceData = await cryptoComp.priceFull( this.state.favourites[i], 'USD' );
+        returnData.push(priceData);
+      } catch(error) {
+        console.warn('fetch price error: ', error)
+      }
+    }
+    return returnData;
+  }
+
   saveSettings() {
     let cryptoData = JSON.parse(localStorage.getItem('cryptoMonitor'));
     if ( !cryptoData ) {
@@ -74,6 +97,8 @@ export class AppProvider extends Component {
     this.setState({
       firstVisit: false,
       page: 'dashboard'
+    }, () => {
+      this.fetchPrices();
     });
     localStorage.setItem('cryptoMonitor', JSON.stringify({
       favourites: this.state.favourites
