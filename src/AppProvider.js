@@ -18,7 +18,7 @@ export class AppProvider extends Component {
       addCoin: this.addCoin,
       removeCoin: this.removeCoin,
       isInFavourites: this.isInFavourites,
-      favourites: ['BTC', 'DOGE', 'ETH', 'XMR'],
+      favourites: [],
       ...this.saveSettings(),
       setFilteredCoins: this.setFilteredCoins,
       confirmFavourites: this.confirmFavourites
@@ -54,22 +54,23 @@ export class AppProvider extends Component {
     this.setState({
       coinList
     });
-    console.log(coinList);
+    //console.log(coinList);
   }
 
   fetchPrices = async () => {
     if ( this.state.firstVisit ) return;
     let prices = await this.prices();
     prices = prices.filter( price => Object.keys(price).length);
+    console.log('app provider, prices - ', prices);
     this.setState({ prices });
   }
 
   prices = async () => {
     let returnData = [];
 
-    for ( let i = 0; i < this.state.favourites.length; i++ ) {
+    for ( let favourite of this.state.favourites ) {
       try {
-        let priceData = await cryptoComp.priceFull( this.state.favourites[i], 'USD' );
+        let priceData = await cryptoComp.priceFull( favourite, 'USD' );
         returnData.push(priceData);
       } catch(error) {
         console.warn('fetch price error: ', error)

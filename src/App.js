@@ -2,6 +2,7 @@ import React from 'react';
 import AppLayout from './AppLayout';
 import NavBar from './NavBar';
 import Settings from './Settings';
+import Dashboard from './Dashboard';
 import Content from './Shared/Content';
 
 import { AppProvider } from './AppProvider';
@@ -14,6 +15,7 @@ function App() {
       <AppProvider>
         <NavBar />
         <Content>
+          <Dashboard />
           <Settings />
         </Content>
       </AppProvider>
