@@ -21,6 +21,7 @@ export class AppProvider extends Component {
       favourites: [],
       ...this.saveSettings(),
       setFilteredCoins: this.setFilteredCoins,
+      setCurrentFavourite: this.setCurrentFavourite,
       confirmFavourites: this.confirmFavourites
     }
   }
@@ -79,6 +80,16 @@ export class AppProvider extends Component {
     return returnData;
   }
 
+  setCurrentFavourite = symbol => {
+    this.setState({
+      currentFavourite: symbol
+    });
+    localStorage.setItem('cryptoMonitor', JSON.stringify({
+      ...JSON.parse(localStorage.getItem('cryptoDash')),
+      currentFavourite: symbol
+    }))
+  }
+
   saveSettings() {
     let cryptoData = JSON.parse(localStorage.getItem('cryptoMonitor'));
     if ( !cryptoData ) {
@@ -87,22 +98,26 @@ export class AppProvider extends Component {
         firstVisit: true
       }
     }
-    let { favourites } = cryptoData
-    return { favourites };
+    let { favourites, currentFavourite } = cryptoData
+    return { favourites, currentFavourite };
   }
 
   setFilteredCoins = filteredCoins => this.setState({filteredCoins});
 
   confirmFavourites = () => {
-    console.log('ding');
+    let currentFavourite = this.state.favourites[0];
+    console.log('confirmFavourites, currentFavourite: ', currentFavourite);
+
     this.setState({
       firstVisit: false,
-      page: 'dashboard'
+      page: 'dashboard',
+      currentFavourite,
     }, () => {
       this.fetchPrices();
     });
     localStorage.setItem('cryptoMonitor', JSON.stringify({
-      favourites: this.state.favourites
+      favourites: this.state.favourites,
+      currentFavourite
     }));
   }
 

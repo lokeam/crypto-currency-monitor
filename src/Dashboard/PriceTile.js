@@ -1,8 +1,9 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { SelectableTile } from '../Shared/Tile';
-import { fontSize3, fontSizeBig } from '../Shared/Styles';
+import { fontSize3, fontSizeBig, greenBoxShadow } from '../Shared/Styles';
 import { CoinHeaderGrid } from '../Settings/CoinHeaderGrid';
+import { AppContext } from '../AppProvider';
 
 const JustifyRight = styled.div`
   justify-self: right;
@@ -36,6 +37,11 @@ const PriceTileStyled = styled(SelectableTile)`
     grid-template-columns: repeat(3, 1fr);
     justify-items: right;
   `}
+
+  ${props => props.currentFavourite && css`
+    ${greenBoxShadow};
+    pointer-events: none;
+  `}
 `;
 
 function ChangePercent( { data }) {
@@ -48,9 +54,11 @@ function ChangePercent( { data }) {
   );
 }
 
-function PriceTile({ symbol, data}) {
+function PriceTile({ symbol, data, currentFavourite, setCurrentFavourite }) {
+  console.log('priceTile, currentFavourite: ', currentFavourite);
   return (
-    <PriceTileStyled>
+    <PriceTileStyled currentFavourite={currentFavourite}
+                     onClick={() => setCurrentFavourite(symbol)}>
       <CoinHeaderGrid>
         <div> { symbol } </div>
         <ChangePercent data={ data } />
@@ -62,9 +70,11 @@ function PriceTile({ symbol, data}) {
   )
 }
 
-function PriceTileCompact({ symbol, data }) {
+function PriceTileCompact({ symbol, data, currentFavourite, setCurrentFavourite }) {
   return (
-    <PriceTileStyled compact>
+    <PriceTileStyled compact
+                     currentFavourite={currentFavourite}
+                     onClick={() => setCurrentFavourite(symbol)}>
         <JustifyLeft> { symbol } </JustifyLeft>
         <ChangePercent data={ data } />
       <div>
@@ -82,12 +92,19 @@ export default function({ price, index }) {
   /* if the top row has less than 5 items display the top functional component,
      else display the PriceTileCompact component
   */
-  let TileCass = index < 5 ? PriceTile : PriceTileCompact;
+  let TileClass = index < 5 ? PriceTile : PriceTileCompact;
 
   return (
-    <TileCass symbol={ symbol }
-               data={ data }>
-      { symbol } { data.PRICE }
-    </TileCass>
+    <AppContext.Consumer>
+      {
+        ({currentFavourite, setCurrentFavourite}) =>
+          <TileClass symbol={ symbol }
+                     data={ data }
+                     currentFavourite={ currentFavourite === symbol }
+                     setCurrentFavourite={ setCurrentFavourite }>
+            { symbol } { data.PRICE }
+          </TileClass>
+      }
+    </AppContext.Consumer>
   )
 }
